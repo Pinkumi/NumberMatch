@@ -4,12 +4,14 @@ import com.remonado.numbermatch.Tools.*;
 
 public class Game{
     private Board board;
-
+    private Pila<Movement> movementStack;
     public Game(int rows, int cols) {
         board = new Board(rows, cols);
+        movementStack = new Pila<>(500);
     }
     public void undo(){
-
+        Movement movement = movementStack.pop();
+        //regresar todoal tablero
     }
 
     public boolean canMatch(Node<Cell> a, Node<Cell> b) {
@@ -83,6 +85,8 @@ public class Game{
         if(!canMatch(a,b)) return false;
         a.getInfo().setActive(false);
         b.getInfo().setActive(false);
+        Movement movement = new Movement(a.getInfo(), b.getInfo());
+        movementStack.push(movement);
         board.linkNodes();
         return true;
     }
@@ -99,7 +103,6 @@ public class Game{
         int r2 = n2.getInfo().getRow();
         int c2 = n2.getInfo().getCol();
         if(n1==n2 || ((r2 == r1)&&(c2 == c1))) return null;
-
         else if(r1<r2){
             if(c1==c2) return "down";
             if(c1>c2) return "downLeft";
