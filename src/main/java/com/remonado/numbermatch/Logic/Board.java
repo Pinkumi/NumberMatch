@@ -6,38 +6,55 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Board {
+public class Board{
 
     private int rows;
     private int cols;
-
+    private boolean isRowDeleted;
+    private int nRowDeleted;
     private List cells;
+    private Node<Cell>[] allNodes;
 
     public Board(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         cells = new List();
-        generateBoard();
-        linkNodes();
     }
-
-    private void generateBoard() {
+    public int generateBoard() {
         Random randNum = new Random();
         ArrayList<Cell> celdasProv = new ArrayList();
-        for(int i = 0; i<(rows*cols)/2 ; i++) {
+        for(int i = 0; i < (rows*cols)/2; i++) {
             int val = randNum.nextInt(9)+1;
             celdasProv.add(new Cell(val));
             celdasProv.add(new Cell(val));
         }
         Collections.shuffle(celdasProv);
-        for(int i=0; i< celdasProv.size(); i++) {
+        for(int i = 0; i < celdasProv.size(); i++) {
             if(i % cols == 0) celdasProv.get(i).setBegin(true);
             else if(i % cols == cols-1) celdasProv.get(i).setEnd(true);
             cells.insertarFinal(celdasProv.get(i));
         }
+
+        int total = celdasProv.size();
+        allNodes = new Node[total];
+        Node<Cell> cur = cells.getInicioNode();
+        for(int i = 0; i < total; i++){
+            allNodes[i] = cur;
+            cur = cur.getRight();
+        }
+
+        linkNodes();
+        return (rows*cols)/2;
     }
-
-
+    public void rebuildAllNodes(){
+        int size = cells.getSize();
+        allNodes = new Node[size];
+        Node<Cell> cur = cells.getInicioNode();
+        for(int i = 0; i < size; i++){
+            allNodes[i] = cur;
+            cur = cur.getRight();
+        }
+    }
     public void linkNodes(){
         int size = cells.getSize();
         int cantPorFila = 0;
@@ -84,10 +101,13 @@ public class Board {
     public List getCells() {
         return cells;
     }
-
+    public void setRows(int rows){
+        this.rows = rows;
+    }
     public int getRows() {
         return rows;
     }
+    public Node<Cell>[] getAllNodes(){ return allNodes; }
 
     public int getCols() {
         return cols;

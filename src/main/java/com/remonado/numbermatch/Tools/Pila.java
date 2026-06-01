@@ -1,6 +1,8 @@
 package com.remonado.numbermatch.Tools;
 
-public class Pila<T>{
+import com.remonado.numbermatch.Logic.Game;
+
+public class Pila<T> {
     private T[] pila;
     private int tope;
     public Pila(int capacidad){

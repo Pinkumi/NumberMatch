@@ -17,7 +17,17 @@ public class Controller {
     public void setView(View view) {
         this.view = view;
     }
-
+    public void changeRootView(int cols, int rows){
+        view.changeRootToGame();
+        game.setDimensions(cols, rows);
+        view.updateBoard();
+        view.updateStats();
+    }
+    public void agregarFila(){
+        game.addRow();
+        view.updateBoard();
+        view.updateStats();
+    }
     public void seleccionar(int pos) {
         Node<Cell> selected = game.getBoard().getCells().get(pos);
         if(selected == null)
@@ -28,29 +38,36 @@ public class Controller {
         } else {
             boolean success = game.match(firstSelected, selected);
             if(success) {
-                firstSelected.getInfo().setActive(false);
-                selected.getInfo().setActive(false);
                 System.out.println("MATCH");
+
             } else {
                 System.out.println("NO MATCH");
             }
             firstSelected = null;
             game.getBoard().linkNodes();
             view.updateBoard();
+            view.updateStats();
+            if(game.hasWon()) view.win();
+            if(game.getGameOver()) view.lose();
         }
     }
-    public void mostrarPista() {
 
+    public void mostrarPista() {
+        view.mostrarPistas(game.getPista()[0], game.getPista()[1]);
     }
     public void mostrarConcPend() {
-
+        view.mostrarConcP(game.calculateConcPend());
+    }
+    public void resetPista(){
+        game.setMostrarPista(false);
     }
     public void mostrarConcEnc(){
-
+        view.mostrarConcE(game.getConcordEnc());
     }
     public void undo(){
         game.undo();
         view.updateBoard();
+        view.updateStats();
     }
 
 }
